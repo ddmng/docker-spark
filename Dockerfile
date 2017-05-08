@@ -1,12 +1,22 @@
-FROM java:8
+FROM alpine:3.3
+MAINTAINER daniele.diminica@gmail.com
 
-RUN mkdir /usr/local/spark
-ADD http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz /usr/local/
-WORKDIR /usr/local/
-RUN tar xzvf spark-2.0.0-bin-hadoop2.7.tgz
-RUN rm spark-2.0.0-bin-hadoop2.7.tgz
-WORKDIR spark-2.0.0-bin-hadoop2.7
+ENV SPARK_PATH /opt/spark
+ENV SPARK_VER 2.1.1
+ENV HADOOP_VER 2.7
+ENV WD spark-${SPARK_VER}-bin-hadoop${HADOOP_VER}
+ENV ARCHIVE_NAME ${WD}.tgz
 
-ENV PATH=$PATH:/usr/local/spark-2.0.0-bin-hadoop2.7/bin
+RUN mkdir -p ${SPARK_PATH}
+WORKDIR ${SPARK_PATH}
 
-CMD spark-shell --master local[2]
+RUN wget http://d3kbcqa49mib13.cloudfront.net/${ARCHIVE_NAME}
+RUN tar xzvf ${ARCHIVE_NAME} && rm ${ARCHIVE_NAME}
+
+RUN apk add --no-cache bash procps coreutils openjdk8-jre-base
+
+WORKDIR ${WD}
+
+COPY run_master.sh ${SPARK_PATH}/${WD}
+COPY run_slave.sh ${SPARK_PATH}/${WD}
+EXPOSE 7077 6066 8080 4040

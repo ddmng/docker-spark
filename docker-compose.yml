@@ -1,0 +1,7 @@
+version: "2"
+services:
+  master:
+    image: rdaneel/spark:2.1.1_2.7
+
+  slave:
+    image: rdaneel/spark:2.1.1_2.7
