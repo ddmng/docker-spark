@@ -17,6 +17,9 @@ RUN apk add --no-cache bash procps coreutils openjdk8-jre-base
 
 WORKDIR ${WD}
 
-COPY run_master.sh ${SPARK_PATH}/${WD}
-COPY run_slave.sh ${SPARK_PATH}/${WD}
+#COPY run_master.sh ${SPARK_PATH}/${WD}/run_master
+#COPY run_slave.sh ${SPARK_PATH}/${WD}/run_slave
+
+COPY run_master.sh /usr/bin/run_master
+COPY run_slave.sh /usr/bin/run_slave
 EXPOSE 7077 6066 8080 4040
